@@ -37,16 +37,18 @@ class AESState:
     def get_column(self, i) -> bytes:
         return self.data[i * 4: i * 4 + 4]
 
-    def sub_bytes(self):
+    def sub_bytes(self) -> 'AESState':
         self.data = bytes([SUB_WORD_MAPPING[d] for d in self.data])
+        return self
 
-    def shift_rows(self):
+    def shift_rows(self) -> 'AESState':
         new_rows = []
         for i in range(4):
             row = self.get_row(i)
             new_rows.append(rot_word(row, i))
 
         self._reset_by_rows(new_rows)
+        return self
 
     def _reset_by_rows(self, rows: List[bytes]):
         assert len(rows) == 4
@@ -65,7 +67,7 @@ class AESState:
 
         self._reset_by_columns(columns)
 
-    def mix_columns(self):
+    def mix_columns(self) -> 'AESState':
         matrix = [
             [2, 3, 1, 1],
             [1, 2, 3, 1],
@@ -73,6 +75,7 @@ class AESState:
             [3, 1, 1, 2],
         ]
         self._matrix_multiply(matrix)
+        return self
 
     def revert_mix_columns(self):
         matrix = [
