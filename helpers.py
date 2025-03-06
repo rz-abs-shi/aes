@@ -39,12 +39,12 @@ RCON_MAPPING = [
 ]
 
 
-def rot_word(b: bytes) -> bytes:
-    return bytes(list(b[1:]) + [b[0]])
+def rot_word(w: bytes, count: int = 1) -> bytes:
+    return bytes([w[(i + count) % len(w)] for i in range(len(w))])
 
 
-def sub_word(b: bytes) -> bytes:
-    arr = map(lambda x: SUB_WORD_MAPPING[x], b)
+def sub_word(w: bytes) -> bytes:
+    arr = map(lambda x: SUB_WORD_MAPPING[x], w)
     return bytes(arr)
 
 
