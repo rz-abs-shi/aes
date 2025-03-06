@@ -41,10 +41,16 @@ class AESState:
         self.data = bytes([SUB_WORD_MAPPING[d] for d in self.data])
         return self
 
-    def shift_rows(self) -> 'AESState':
+    def revert_sub_bytes(self):
+        self.data = bytes([SUB_WORD_MAPPING_REVERSE[d] for d in self.data])
+        return self
+
+    def shift_rows(self, reverse: bool = False) -> 'AESState':
         new_rows = []
         for i in range(4):
             row = self.get_row(i)
+            if reverse:
+                i = -i
             new_rows.append(rot_word(row, i))
 
         self._reset_by_rows(new_rows)
@@ -85,6 +91,11 @@ class AESState:
             [11, 13, 9, 14],
         ]
         self._matrix_multiply(matrix)
+        return self
 
-    def add_round_key(self, key: bytes):
+    def add_round_key(self, key: bytes) -> 'AESState':
         self.data = xor(self.data, key)
+        return self
+
+    def hex(self):
+        return self.data.hex()

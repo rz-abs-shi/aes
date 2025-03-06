@@ -2,9 +2,9 @@ from key_expansion import expand_key, hex_key_to_bytes
 from state import AESState
 
 
-def encrypt(key: str, msg: str) -> bytes:
-    keys = expand_key(bytes.fromhex(key))
-    state = AESState.from_str(msg)
+def encrypt(key: bytes, msg: bytes) -> bytes:
+    keys = expand_key(key)
+    state = AESState(msg)
 
     # pre-whitening
     state.add_round_key(keys[0])
@@ -16,13 +16,17 @@ def encrypt(key: str, msg: str) -> bytes:
     # final round
     state.sub_bytes().shift_rows().add_round_key(keys[10])
 
-    print(state)
     return state.data
 
 
-def decrypt(key: str, msg_encrypted: str):
-    keys = expand_key(bytes.fromhex(key))
-    state = AESState.from_str(msg_encrypted)
+def decrypt(key: bytes, msg_encrypted: bytes) -> bytes:
+    keys = expand_key(key)
+    state = AESState(msg_encrypted)
 
-    state.add_round_key(keys[10])
+    state.add_round_key(keys[10]).shift_rows(reverse=True).revert_sub_bytes()
 
+    for key in keys[9:0:-1]:
+        state.add_round_key(key).revert_mix_columns().shift_rows(reverse=True).revert_sub_bytes()
+
+    state.add_round_key(keys[0])
+    return state.data
