@@ -18,3 +18,5 @@ class TestState(TestCase):
         state.shift_rows()
         print(state)
 
+        state.mix_columns()
+        print(state)
