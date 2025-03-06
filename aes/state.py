@@ -1,7 +1,7 @@
 from typing import List
 
-from helpers import *
-from mix_columns import field_matrix_multiple
+from aes.helpers import *
+from aes.mix_columns import field_matrix_multiple
 
 
 class AESState:

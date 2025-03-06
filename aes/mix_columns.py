@@ -1,7 +1,7 @@
 from typing import List
 
-from helpers import xor
-from mix_columns_mapping import MULTIPLICATION_MAPPING
+from .helpers import xor
+from .mix_columns_mapping import MULTIPLICATION_MAPPING
 
 
 def field_matrix_multiple(matrix: List[List[int]], word: bytes) -> bytes:

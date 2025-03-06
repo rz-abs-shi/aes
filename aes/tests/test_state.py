@@ -1,6 +1,6 @@
 from unittest import TestCase
 
-from state import AESState
+from aes.state import AESState
 
 
 class TestState(TestCase):
@@ -14,4 +14,4 @@ class TestState(TestCase):
         self.assertEqual(state.revert_sub_bytes().hex(), '000102030405060708090a0b0c0d0e0f')
 
         self.assertEqual(state.shift_rows().hex(), '00050a0f04090e03080d02070c01060b')
-        self.assertEqual(state.shift_rows(left=False).hex(), '000102030405060708090a0b0c0d0e0f')
+        self.assertEqual(state.shift_rows(reverse=True).hex(), '000102030405060708090a0b0c0d0e0f')

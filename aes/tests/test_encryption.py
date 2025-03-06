@@ -1,7 +1,6 @@
 from unittest import TestCase
 
-from encryption import encrypt, decrypt
-from state import AESState
+from aes.encryption import AESEncryption
 
 
 class TestEncryption(TestCase):
@@ -9,8 +8,9 @@ class TestEncryption(TestCase):
     def test_encryption(self):
         msg = 'theblockbreakers'.encode()
         key = bytes.fromhex('2b7e151628aed2a6abf7158809cf4f3c')
+        aes_encrypt = AESEncryption(key=key)
 
-        encrypted_msg = encrypt(key=key, msg=msg)
+        encrypted_msg = aes_encrypt.encrypt(msg=msg)
 
         self.assertEqual(
             encrypted_msg.hex(),
@@ -18,11 +18,11 @@ class TestEncryption(TestCase):
         )
 
         self.assertEqual(
-            decrypt(key=key, msg_encrypted=encrypted_msg),
+            aes_encrypt.decrypt(msg_encrypted=encrypted_msg),
             msg
         )
 
         msg = 'Nice work reza!!'.encode()
-        self.assertEqual(decrypt(key=key, msg_encrypted=encrypt(key=key, msg=msg)), msg)
+        self.assertEqual(aes_encrypt.decrypt(aes_encrypt.encrypt(msg=msg)), msg)
 
 

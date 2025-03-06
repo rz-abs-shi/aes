@@ -1,5 +1,5 @@
 from typing import List
-from helpers import *
+from .helpers import *
 
 
 def hex_key_to_bytes(key: str) -> bytes:
@@ -26,12 +26,12 @@ def next_round_key(key: bytes, round_number: int) -> bytes:
     return b''.join(words[4:])
 
 
-def expand_key(key: bytes) -> List[bytes]:
+def expand_key(key: bytes, count: int = 10) -> List[bytes]:
     assert len(key) == 16, 'RSA key should be 128 bits'
 
     keys = [key]
 
-    for i in range(10):
+    for i in range(count):
         keys.append(next_round_key(keys[-1], i + 1))
 
     return keys
